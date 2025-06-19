@@ -1,10 +1,14 @@
-import { useAppContext } from '../context/AppContext'
-import type { CityProps } from '../types'
+import type { CityProps, WeatherResult, WeatherResultState } from '../types'
 
-const WeatherContent = ({ city }: { city: CityProps }) => {
-  //   console.log('data:=>', weatherData)
-  const { weatherData, weatherResultStates: weatherState } = useAppContext()
-
+const WeatherContent = ({
+  city,
+  weatherData,
+  weatherState,
+}: {
+  city: CityProps
+  weatherData: WeatherResult | null
+  weatherState: WeatherResultState
+}) => {
   return (
     <div>
       <div className='text-center items-center mb-2'>

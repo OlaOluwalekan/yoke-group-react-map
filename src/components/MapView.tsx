@@ -1,9 +1,9 @@
 import mapboxgl from 'mapbox-gl'
 import { useEffect, useRef } from 'react'
-import { AppProvider, useAppContext } from '../context/AppContext'
+import { useAppContext } from '../context/AppContext'
 import WeatherContent from './WeatherContent'
-import { createRoot } from 'react-dom/client'
-import useWeather from '../hooks/useWeather'
+import { createRoot, type Root } from 'react-dom/client'
+import useWeather from '../hooks/useWeather2'
 
 mapboxgl.accessToken = import.meta.env.VITE_MAPBOX_TOKEN
 
@@ -11,7 +11,10 @@ const MapView = () => {
   const mapContainer = useRef<HTMLDivElement | null>(null)
   const mapInstance = useRef<mapboxgl.Map | null>(null)
   const markerRef = useRef<mapboxgl.Marker | null>(null)
-  const { selectedCity, setSearchIsFocus } = useAppContext()
+  const { selectedCity, setSearchIsFocus, weatherData, weatherResultStates } =
+    useAppContext()
+  const popupRoot = useRef<Root>(null)
+
   useWeather(selectedCity)
 
   // Initialize map once
@@ -39,8 +42,7 @@ const MapView = () => {
     })
 
     const popupNode = document.createElement('div')
-    // popupContent.innerHTML = '<WeatherContent/>'
-    // popupContent.innerHTML = 'Hello'
+    popupRoot.current = createRoot(popupNode)
 
     const popup = new mapboxgl.Popup({
       closeOnClick: false,
@@ -49,16 +51,13 @@ const MapView = () => {
     })
       .setLngLat([lon, lat])
       .setDOMContent(popupNode)
-    // .setHTML('<WeatherContent/>')
-    // .setHTML(`<div className="content">
-    //     <h1 className="text-lg font-semibold">${name}</h1>
-    //     <p className="text-sm text-gray-500">${country}</p>
-    //   </div>`)
-    const root = createRoot(popupNode)
-    root.render(
-      <AppProvider>
-        <WeatherContent city={selectedCity} />
-      </AppProvider>
+
+    popupRoot.current.render(
+      <WeatherContent
+        city={selectedCity}
+        weatherData={weatherData}
+        weatherState={weatherResultStates}
+      />
     )
 
     // Remove previous marker if exists
@@ -73,6 +72,20 @@ const MapView = () => {
     // Store this marker so we can remove it next time
     markerRef.current = marker
   }, [selectedCity])
+
+  useEffect(() => {
+    if (popupRoot.current && selectedCity) {
+      popupRoot.current.render(
+        // <AppProvider>
+        <WeatherContent
+          city={selectedCity}
+          weatherData={weatherData}
+          weatherState={weatherResultStates}
+        />
+        // </AppProvider>
+      )
+    }
+  }, [weatherData, weatherResultStates])
 
   return (
     <div
