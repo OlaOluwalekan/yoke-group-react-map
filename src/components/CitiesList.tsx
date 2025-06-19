@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import type { CitiesListProps, CityProps } from '../types'
 import { cities } from '../data/cities'
 import { useAppContext } from '../context/AppContext'
+import clsx from 'clsx'
 
 const CitiesList = ({ searchValue = '', setSearchValue }: CitiesListProps) => {
   const { setSelectedCity, setSearchIsFocus } = useAppContext()
@@ -23,10 +24,13 @@ const CitiesList = ({ searchValue = '', setSearchValue }: CitiesListProps) => {
   return (
     <div className='bg-white rounded-lg max-h-[calc(100vh-8rem)] overflow-y-auto shadow-lg'>
       <ul>
-        {filteredCities.map((city) => (
+        {filteredCities.map((city, i) => (
           <li
             key={city.id}
-            className='cursor-pointer p-2 hover:bg-gray-100 rounded'
+            className={clsx(
+              'cursor-pointer p-2 hover:bg-gray-100',
+              i === cities.length - 1 ? '' : 'border-b'
+            )}
             onClick={() => handleCityClicked(city)}
           >
             {city.name}, {city.country}
@@ -38,11 +42,6 @@ const CitiesList = ({ searchValue = '', setSearchValue }: CitiesListProps) => {
           </li>
         )}
       </ul>
-      {/* {filteredCities.map((city) => (
-        <div key={city.id} className='p-2 border-b border-gray-200'>
-          {city.name}, {city.country}
-        </div>
-      ))} */}
     </div>
   )
 }

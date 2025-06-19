@@ -22,8 +22,9 @@ const MapView = () => {
     if (!mapContainer.current) return
     mapInstance.current = new mapboxgl.Map({
       container: mapContainer.current,
-      style: 'mapbox://styles/mapbox/light-v10',
-      center: [0, 20], // initial center
+      style: 'mapbox://styles/mapbox/streets-v11',
+      // style: 'mapbox://styles/mapbox/light-v10',
+      center: [6, 3], // initial center
       zoom: 1.5,
     })
 
