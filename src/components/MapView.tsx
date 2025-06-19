@@ -11,7 +11,7 @@ const MapView = () => {
   const mapContainer = useRef<HTMLDivElement | null>(null)
   const mapInstance = useRef<mapboxgl.Map | null>(null)
   const markerRef = useRef<mapboxgl.Marker | null>(null)
-  const { selectedCity } = useAppContext()
+  const { selectedCity, setSearchIsFocus } = useAppContext()
   useWeather(selectedCity)
 
   // Initialize map once
@@ -74,7 +74,13 @@ const MapView = () => {
     markerRef.current = marker
   }, [selectedCity])
 
-  return <div className='flex-1 h-screen' ref={mapContainer}></div>
+  return (
+    <div
+      className='flex-1 h-screen'
+      ref={mapContainer}
+      onClick={() => setSearchIsFocus(false)}
+    ></div>
+  )
 }
 
 export default MapView
