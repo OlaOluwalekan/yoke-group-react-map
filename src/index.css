@@ -1,1 +1,11 @@
 @import 'tailwindcss';
+
+.my-custom-popup .mapboxgl-popup-content {
+  /* background-color: lightblue; */
+  box-shadow: 2px 2px 5px #00000076;
+  color: darkblue;
+  min-width: 100px;
+}
+.my-custom-popup .mapboxgl-popup-tip {
+  border-top-color: lightblue;
+}
